@@ -1,66 +1,39 @@
-import { useState } from 'react';
-import Header from './components/Header';
-import FilterBar from './components/FilterBar';
-import MenuGrid from './components/MenuGrid';
-import Footer from './components/Footer';
-import menuData from './data/menuData';
+import { useState } from 'react'
+import { Routes, Route, Link } from 'react-router-dom'
+import Page0 from './pages/F1'
 
-/**
- * App component - Root application component
- * 
- * @component
- * @description Main application container managing filter state and orchestrating
- * layout of Header, FilterBar, MenuGrid, and Footer components. Uses React useState
- * hook for client-side filter state management with no server-side processing.
- * 
- * Accessibility Features:
- * - Semantic HTML5 structure with proper landmark elements
- * - <main> element with id="main-content" for skip link target
- * - Proper heading hierarchy: H1 (Header) → H2 (Footer) → H3 (MenuItem)
- * - ARIA landmarks automatically provided by semantic HTML (header, main, footer, nav)
- * - Dark background with WCAG-compliant color contrast ratios throughout
- * - Keyboard navigation support across all interactive elements
- * - Screen reader announcements for filter state changes via aria-live regions
- * 
- * Performance:
- * - Client-side filtering with <100ms response time
- * - React.memo on FilterBar prevents unnecessary re-renders
- * - useMemo in MenuGrid optimizes filter calculations
- * 
- * @returns {JSX.Element} Complete application layout with all components
- * 
- * @example
- * <App />
- */
 export default function App() {
-  const [activeFilter, setActiveFilter] = useState('All');
+  const [navOpen, setNavOpen] = useState(false)
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
-      {/* Header with shop branding */}
-      <Header />
+    <div className="min-h-screen bg-zinc-950">
+      {/* Navigation */}
+      <nav className="sticky top-0 z-50 backdrop-blur-xl bg-zinc-900/80 border-b border-white/5">
+        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+          <span className="text-sm font-bold text-white">Coffee shop menu website called Bean & Brew. Dark backgro...</span>
+          <button
+            onClick={() => setNavOpen(!navOpen)}
+            className="md:hidden p-2 text-zinc-400 hover:text-white"
+          >
+            {navOpen ? '✕' : '☰'}
+          </button>
+          <div className="hidden md:flex items-center gap-1">
+          <Link to="/" className="px-3 py-1.5 text-xs font-medium rounded-lg hover:bg-white/10 transition-colors text-zinc-300 hover:text-white">React Component Architect…</Link>
+          </div>
+        </div>
+        {navOpen && (
+          <div className="md:hidden px-4 pb-3 flex flex-col gap-1">
+          <Link to="/" className="px-3 py-1.5 text-xs font-medium rounded-lg hover:bg-white/10 transition-colors text-zinc-300 hover:text-white">React Component Architect…</Link>
+          </div>
+        )}
+      </nav>
 
-      {/* Main content area with skip link target */}
-      <main 
-        id="main-content"
-        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"
-        role="main"
-      >
-        {/* Category filter buttons */}
-        <FilterBar 
-          activeFilter={activeFilter}
-          onFilterChange={setActiveFilter}
-        />
-
-        {/* Coffee menu grid */}
-        <MenuGrid 
-          items={menuData}
-          activeFilter={activeFilter}
-        />
+      {/* Pages */}
+      <main>
+        <Routes>
+        <Route path="/" element={<Page0 />} />
+        </Routes>
       </main>
-
-      {/* Footer with opening hours */}
-      <Footer />
     </div>
-  );
+  )
 }
